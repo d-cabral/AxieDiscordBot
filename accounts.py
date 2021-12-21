@@ -51,19 +51,20 @@ def addScholar(file, ronin_address, discordId):
 
 
 def getRoninAddressByDiscordId(jsonfile, discordId, senderDiscordId=''):
-    with open(jsonfile, 'r+') as file:
-        file_data = json.load(file)
+    if Path(jsonfile).is_file():
+        with open(jsonfile, 'r+') as file:
+            file_data = json.load(file)
 
-        for ids in file_data['scholars']:
-            if discordId in ids['discordId']:
-                return ids['roninAddress']
-
-        if len(senderDiscordId.strip()) > 0:
             for ids in file_data['scholars']:
-                if senderDiscordId in ids['discordId']:
+                if discordId in ids['discordId']:
                     return ids['roninAddress']
 
-        print('Failed to find ronin address link to the discord accpount')
+            if len(senderDiscordId.strip()) > 0:
+                for ids in file_data['scholars']:
+                    if senderDiscordId in ids['discordId']:
+                        return ids['roninAddress']
 
-        return ''
+            print('Failed to find ronin address link to the discord accpount')
+
+            return ''
 
