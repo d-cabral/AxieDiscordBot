@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from discord import client
 
 
 def addScholar(file, ronin_address, discordId):
@@ -8,7 +9,8 @@ def addScholar(file, ronin_address, discordId):
 
     scholar_details = {
         'roninAddress': ronin_address,
-        'discordId': discordId
+        'discordId': discordId,
+        'discordName': getDiscordNameByID(discordId)
     }
 
     path = Path(file)
@@ -39,7 +41,8 @@ def addScholar(file, ronin_address, discordId):
             "scholars": [
                 {
                     'roninAddress': ronin_address,
-                    'discordId': discordId
+                    'discordId': discordId,
+                    'discordName': getDiscordNameByID(discordId)
                 }
             ]
         }
@@ -50,13 +53,14 @@ def addScholar(file, ronin_address, discordId):
     return ''
 
 
-def getRoninAddressByDiscordId(jsonfile, discordId, senderDiscordId=0):
+def getRoninAddressByDiscordIdOrName(jsonfile, discordIdOrName, senderDiscordId=0):
     if Path(jsonfile).is_file():
         with open(jsonfile, 'r+') as file:
             file_data = json.load(file)
 
             for ids in file_data['scholars']:
-                if discordId in ids['discordId']:
+                if discordIdOrName in ids['discordId'] or \
+                        discordIdOrName in ids['discordName']:
                     return ids['roninAddress']
 
             if senderDiscordId == 0:
@@ -68,3 +72,8 @@ def getRoninAddressByDiscordId(jsonfile, discordId, senderDiscordId=0):
 
             return ''
 
+
+def getDiscordNameByID(discordId):
+    result = await client.fetch_user(discordId)
+
+    return result
