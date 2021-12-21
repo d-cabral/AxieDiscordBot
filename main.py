@@ -80,7 +80,7 @@ async def on_message(message):
 
             await message.channel.trigger_typing()
 
-            if default_admin_only_channel_id == messageChannelID:
+            if default_admin_only_channel_id != messageChannelID:
                 await message.reply('Insufficient command permission. Admin only')
 
             msg_split = message.content.lower().split()
