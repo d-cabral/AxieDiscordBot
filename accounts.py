@@ -50,7 +50,7 @@ def addScholar(file, ronin_address, discordId):
     return ''
 
 
-def getRoninAddressByDiscordId(jsonfile, discordId, senderDiscordId=''):
+def getRoninAddressByDiscordId(jsonfile, discordId, senderDiscordId=0):
     if Path(jsonfile).is_file():
         with open(jsonfile, 'r+') as file:
             file_data = json.load(file)
@@ -59,7 +59,7 @@ def getRoninAddressByDiscordId(jsonfile, discordId, senderDiscordId=''):
                 if discordId in ids['discordId']:
                     return ids['roninAddress']
 
-            if len(senderDiscordId.strip()) > 0:
+            if senderDiscordId == 0:
                 for ids in file_data['scholars']:
                     if senderDiscordId in ids['discordId']:
                         return ids['roninAddress']
